@@ -1,0 +1,43 @@
+6,7d5
+< categories
+< domains
+21,38d18
+< keywords
+< link_keyword0
+< link_keyword1
+< link_keyword2
+< link_keyword3
+< link_keyword4
+< link_keyword5
+< link_keyword6
+< link_keyword7
+< link_keyword8
+< link_keyword9
+< link_keyworda
+< link_keywordb
+< link_keywordc
+< link_keywordd
+< link_keyworde
+< link_keywordf
+< links
+45d24
+< pending
+62a42,43
+> pragyanV3_userprofile_elementdata
+> pragyanV3_userprofile_elementdesc
+76,77d56
+< query_log
+< quiz_answersubmissions
+81,82c60,61
+< quiz_sections
+< quiz_userattempts
+---
+> quiz_quizattemptdata
+> quiz_submittedanswers
+87,89d65
+< share_files
+< site_category
+< sites
+91,92d66
+< temp
+< 
