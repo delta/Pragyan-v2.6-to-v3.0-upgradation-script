@@ -1,0 +1,2 @@
+
+ALTER TABLE  `article_content` ADD  `allowComments` TINYINT( 1 ) NOT NULL

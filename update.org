@@ -1,0 +1,186 @@
+* queries
+** add field `allow_comments` to `article_content`
+   ALTER TABLE  `article_content` ADD  `allowComments` TINYINT( 1 ) NOT NULL;
+** + `article_comments`
+   CREATE TABLE IF NOT EXISTS `article_comments` (
+     `comment_id` int(11) NOT NULL AUTO_INCREMENT,
+     `page_modulecomponentid` int(11) NOT NULL,
+     `user` varchar(200) NOT NULL,
+     `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     `comment` text NOT NULL,
+     PRIMARY KEY (`comment_id`)
+   ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 ;
+
+** + `article_draft`
+   CREATE TABLE IF NOT EXISTS `article_draft` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `draft_number` int(11) NOT NULL,
+     `draft_content` text NOT NULL,
+     `draft_lastsaved` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+     `user_id` int(11) NOT NULL
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+** + `book_desc`
+   CREATE TABLE IF NOT EXISTS `book_desc` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `initial` int(11) NOT NULL,
+     `list` varchar(256) NOT NULL,
+     `menu_hide` varchar(500) NOT NULL,
+     PRIMARY KEY (`page_modulecomponentid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+** > `form_desc`
+   ALTER TABLE  `form_desc` CHANGE  `form_heading`  `form_heading` VARCHAR( 1000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+** > `form_elementdesc`
+   ALTER TABLE  `form_elementdesc` CHANGE  `form_elementname`  `form_elementname` VARCHAR( 1000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+   CHANGE  `form_elementdisplaytext`  `form_elementdisplaytext` VARCHAR( 5000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT  'Description of data held',
+   CHANGE  `form_elementdefaultvalue`  `form_elementdefaultvalue` VARCHAR( 4000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+   CHANGE  `form_elementmorethan`  `form_elementmorethan` VARCHAR( 4000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+   CHANGE  `form_elementlessthan`  `form_elementlessthan` VARCHAR( 4000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+** + `forum_like`
+   CREATE TABLE IF NOT EXISTS `forum_like` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `forum_thread_id` int(11) NOT NULL,
+     `forum_post_id` int(11) NOT NULL,
+     `forum_like_user_id` int(11) NOT NULL,
+     `like_status` enum('0','1') NOT NULL COMMENT '(0-Dislike 1-like)'
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+** > `forum_module`
+   ALTER TABLE  `forum_module` CHANGE  `last_post_datetime`  `last_post_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   ADD  `total_thread_count` INT( 11 ) NOT NULL DEFAULT  '1',
+   ADD  `allow_delete_posts` ENUM(  '0',  '1' ) NOT NULL DEFAULT  '0' COMMENT  '(1-Allow 0-Don''t Allow)',
+   ADD  `allow_like_posts` ENUM(  '0',  '1' ) NOT NULL DEFAULT  '0' COMMENT  '(1-Allow 0-Don''t Allow)';
+** + `forum_visits`
+   CREATE TABLE IF NOT EXISTS `forum_visits` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `user_id` int(11) NOT NULL,
+     `last_visit` datetime NOT NULL
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+** > `gallery_name`
+   ALTER TABLE  `gallery_name` ADD  `imagesPerPage` INT( 11 ) NOT NULL DEFAULT  '6',
+   ADD  `allowViews` TINYINT( 1 ) NOT NULL DEFAULT  '0';
+** > `gallery_pics`
+   ALTER TABLE  `gallery_pics` ADD  `pic_rate` INT( 11 ) NOT NULL;
+** > `hospi_accomodation_status`
+   ALTER TABLE `hospi_accomodation_status`
+   DROP `hospi_projected_checkin`,
+   DROP `hospi_projected_checkout`;
+
+** > `hospi_hostel`
+   ALTER TABLE  `hospi_hostel` ADD  `hospi_floor` INT( 1 ) NOT NULL
+** > `news_desc`
+   ALTER TABLE  `news_desc` CHANGE  `news_title`  `news_title` VARCHAR( 150 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+   CHANGE  `news_description`  `news_description` VARCHAR( 1000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+   ADD  `news_link` VARCHAR( 250 ) NULL DEFAULT NULL ,
+   ADD  `news_copyright` VARCHAR( 1000 ) NULL DEFAULT NULL;
+** - `poll_answers`
+   DROP TABLE  `poll_answers`;
+** + `list_images`
+   CREATE TABLE IF NOT EXISTS `list_images` (
+     `page_id` int(11) NOT NULL,
+     `page_name` varchar(51) NOT NULL,
+     `page_image` varchar(51) NOT NULL
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+** + `list_prop`
+CREATE TABLE IF NOT EXISTS `list_prop` (
+ `page_modulecomponentid` int(11) NOT NULL,
+ `depth` int(11) NOT NULL,
+ UNIQUE KEY `page_modulecomponentid_2` (`page_modulecomponentid`),
+ KEY `page_modulecomponentid` (`page_modulecomponentid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+** + `poll_content`
+   CREATE TABLE IF NOT EXISTS `poll_content` (
+     `pid` int(11) NOT NULL auto_increment,
+     `page_modulecomponentid` int(11) NOT NULL,
+     `ques` longtext NOT NULL,
+     `o1` longtext NOT NULL,
+     `o2` longtext NOT NULL,
+     `o3` longtext NOT NULL,
+     `o4` longtext NOT NULL,
+     `o5` longtext NOT NULL,
+     `o6` longtext NOT NULL,
+     `multiple_opt` tinyint(1) NOT NULL default '0' COMMENT '1 indicates multiple options',
+     `visibility` tinyint(1) NOT NULL default '1',
+     PRIMARY KEY (`pid`)
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+** - `poll_questions`
+   DROP TABLE  `poll_questions`;
+** + `poll_log`
+   CREATE TABLE IF NOT EXISTS `poll_log` (
+     `pid` int(11) NOT NULL auto_increment,
+     `page_modulecomponentid` int(11) NOT NULL,
+     `o1` int(11) NOT NULL default '0',
+     `o2` int(11) NOT NULL default '0',
+     `o3` int(11) NOT NULL default '0',
+     `o4` int(11) NOT NULL default '0',
+     `o5` int(11) NOT NULL default '0',
+     `o6` int(11) NOT NULL default '0',
+     PRIMARY KEY (`pid`)
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+
+** + `poll_users`
+   CREATE TABLE IF NOT EXISTS `poll_users` (
+     `pid` int(11) NOT NULL,
+     `userID` int(11) NOT NULL,
+     `page_modulecomponentid` int(11) NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+** DONE + `prefix_modules`
+   CREATE TABLE IF NOT EXISTS `pragyanV2_modules` (
+     `module_name` varchar(128) NOT NULL,
+     `module_tables` varchar(500) NOT NULL,
+     `allow_uploads` tinyint(1),
+     PRIMARY KEY (`module_name`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+** DONE + `prefix_global`
+   CREATE TABLE IF NOT EXISTS `pragyanV2_global` (
+     `attribute` varchar(50) NOT NULL,
+     `value` text NOT NULL,
+     PRIMARY KEY (`attribute`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+** DONE > `prefix_pages`
+   ALTER TABLE  `pragyanV2_pages` CHANGE  `page_module`  `page_module` VARCHAR( 128 ) NOT NULL COMMENT  'Module type of the page',
+   ADD `page_template` varchar(50) NOT NULL,
+   ADD `page_image` varchar(300) DEFAULT NULL,
+   ADD `page_displayinsitemap` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'To display in sitemap or not',
+   ADD `page_displayicon` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 - To display icon in menu 0 - Not to display icon in menu',
+   ADD `page_menutype` enum('classic','complete','multidepth') NOT NULL DEFAULT 'classic' COMMENT 'Type of the menu : Classic (normal) or Drop-down (with some depth)',
+   ADD `page_menudepth` int(11) NOT NULL DEFAULT '1',
+   ADD `page_openinnewtab` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Whether to open the page in a new tab when clicked',
+   ADD INDEX (  `page_module` ),
+   AUTO_INCREMENT =5;
+
+** TODO > `prefix_permissionlist`
+   ALTER TABLE  `pragyanV2_permissionlist` CHANGE  `page_module`  `page_module` VARCHAR( 128 ) NOT NULL
+//   , AUTO_INCREMENT =1
+*** had some problem while executing this statement in phpmyadmin... had to empty the table to execute the query
+
+
+** DONE + `prefix_templates`
+   CREATE TABLE IF NOT EXISTS `pragyanV2_templates` (
+     `template_name` varchar(50) NOT NULL,
+     PRIMARY KEY (`template_name`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+** DONE + `prefix_tempuploads`
+   CREATE TABLE IF NOT EXISTS `pragyanV2_tempuploads` (
+     `id` int(11) NOT NULL AUTO_INCREMENT,
+     `filePath` varchar(500) NOT NULL,
+     `info` varchar(1000) NOT NULL,
+     PRIMARY KEY (`id`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+** DONE > `prefix_uploads`
+   ALTER TABLE  `pragyanV2_uploads`
+   CHANGE  `page_module`  `page_module` VARCHAR( 128 ) NOT NULL,
+   ADD FOREIGN KEY (`page_module`) REFERENCES `pragyanV3_modules`(`module_name`);
+
+** DONE > `prefix_usergroup`
+   ALTER TABLE  `pcmsv2`.`pragyanV2_usergroup` DROP INDEX  `user_id` ,
+   ADD INDEX  `user_id` (  `user_id` , `group_id` )
