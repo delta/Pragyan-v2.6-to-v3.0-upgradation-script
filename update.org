@@ -1,4 +1,5 @@
 * queries
+  note t
 ** add field `allow_comments` to `article_content`
    ALTER TABLE  `article_content` ADD  `allowComments` TINYINT( 1 ) NOT NULL;
 ** + `article_comments`
@@ -161,7 +162,6 @@ CREATE TABLE IF NOT EXISTS `list_prop` (
 //   , AUTO_INCREMENT =1
 *** had some problem while executing this statement in phpmyadmin... had to empty the table to execute the query
 
-
 ** DONE + `prefix_templates`
    CREATE TABLE IF NOT EXISTS `pragyanV2_templates` (
      `template_name` varchar(50) NOT NULL,
@@ -179,8 +179,72 @@ CREATE TABLE IF NOT EXISTS `list_prop` (
 ** DONE > `prefix_uploads`
    ALTER TABLE  `pragyanV2_uploads`
    CHANGE  `page_module`  `page_module` VARCHAR( 128 ) NOT NULL,
-   ADD FOREIGN KEY (`page_module`) REFERENCES `pragyanV3_modules`(`module_name`);
+   ADD FOREIGN KEY (`page_module`) REFERENCES `pragyanV2_modules`(`module_name`);
 
 ** DONE > `prefix_usergroup`
    ALTER TABLE  `pcmsv2`.`pragyanV2_usergroup` DROP INDEX  `user_id` ,
    ADD INDEX  `user_id` (  `user_id` , `group_id` )
+   
+** TODO what to do with `pragyanV2_userprofile_elementdata` and `pragyanV2_userprofile_elementdesc`??? how does the user details get transformed to some other tables???
+** DONE `prefix_users`
+   ALTER TABLE  `pragyanV2_users` CHANGE  `user_loginmethod`  `user_loginmethod` ENUM(  'openid',  'db',  'ldap',  'imap',  'ads' ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT  'db' COMMENT 'Login Method'
+
+** DONE + `prefix_openid_users`
+   CREATE TABLE IF NOT EXISTS `pragyanV2_openid_users` (
+     `openid_id` INT NOT NULL AUTO_INCREMENT,
+     `openid_url` VARCHAR(2063) NOT NULL ,
+     `user_id` INT NOT NULL ,
+     PRIMARY KEY (`openid_id`)
+   )ENGINE = MyISAM ;
+   
+** DONE + `prefix_widgets`
+   CREATE TABLE IF NOT EXISTS `pragyanV2_widgets` (
+     `widget_id` int(11) NOT NULL,
+     `widget_instanceid` int(11) NOT NULL,
+     `page_id` int(11) NOT NULL,
+     `widget_location` int(11) NOT NULL,
+     `widget_order` int(11) NOT NULL,
+     `widget_propagate` int(1) NOT NULL DEFAULT '0',
+     PRIMARY KEY (`widget_id`,`widget_instanceid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+** DONE + `prefix_widgetsconfig`
+   CREATE TABLE IF NOT EXISTS `pragyanV2_widgetsconfig` (
+     `widget_id` int(11) NOT NULL,
+     `widget_instanceid` int(11) NOT NULL,
+     `config_name` varchar(128) NOT NULL,
+     `config_value` longtext NOT NULL,
+     PRIMARY KEY (`widget_id`,`widget_instanceid`,`config_name`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+** DONE + `prefix_widgetsdata`
+   CREATE TABLE IF NOT EXISTS `pragyanV3_widgetsdata` (
+     `widget_id` int(11) NOT NULL,
+     `widget_instanceid` int(11) NOT NULL,
+     `widget_datakey` varchar(500) NOT NULL,
+     `widget_datavalue` longtext NOT NULL,
+     PRIMARY KEY (`widget_id`,`widget_instanceid`,`widget_datakey`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+** DONE + `prefix_widgetsconfiginfo`
+CREATE TABLE IF NOT EXISTS `pragyanV3_widgetsconfiginfo` (
+ `widget_id` int(11) NOT NULL,
+ `config_name` varchar(128) NOT NULL,
+ `config_type` enum('text','textarea','bool','integer','date','select','hidden','datetime','file','radio','checkbox','noinput') NOT NULL,
+ `config_options` text NOT NULL,
+ `config_displaytext` text NOT NULL,
+ `config_default` longtext NOT NULL,
+ `is_global` int(1) NOT NULL,
+ `config_rank` int(10) NOT NULL,
+ PRIMARY KEY (`widget_id`,`config_name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+** DONE + `prefix_widgetsinfo`
+   CREATE TABLE IF NOT EXISTS `pragyanV3_widgetsinfo` (
+     `widget_id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+     `widget_name` VARCHAR( 100 ) NOT NULL ,
+     `widget_classname` VARCHAR ( 100 ) NOT NULL,
+     `widget_description` MEDIUMTEXT NOT NULL ,
+     `widget_version` VARCHAR( 27 ) NOT NULL ,
+     `widget_author` TEXT NULL ,
+     `widget_foldername` VARCHAR( 27 ) NOT NULL ,
+     UNIQUE ( `widget_foldername` )
+   ) ENGINE=MYISAM DEFAULT CHARSET=latin1;
