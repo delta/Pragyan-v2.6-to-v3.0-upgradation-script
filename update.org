@@ -1,5 +1,5 @@
 * queries
-  note that for lists marked as DONE, the prefix_ must be replaced by the prefix in the config file
+  note t
 ** add field `allow_comments` to `article_content`
    ALTER TABLE  `article_content` ADD  `allowComments` TINYINT( 1 ) NOT NULL;
 ** + `article_comments`
@@ -468,3 +468,26 @@ create table domains (
 	domain_id int auto_increment primary key not null,	
 	domain varchar(255)
 ) ENGINE = MYISAM;
+
+** upgrade script for sphider in order
+*** v1.2
+create table query_log (
+	query varchar(255),
+	time timestamp(14),
+	elapsed float(2),
+	results int);
+
+alter table links add column size float(2) after indexdate;
+
+*** v1.2.5
+alter table links add column description varchar(255) after title;
+update sites set url =concat("http://", url);
+update links set url =concat("http://", url);
+
+*** v1.2.6
+alter table sites add column spider_depth int default 2, add column required text, add column disallowed text, add column can_leave_domain bool;
+alter table links add column visible int default 0, add column level int;
+
+*** v_new
+alter table sites add column spider_depth int default 2, must_include text, mustnot_include text;
+alter table links add column visible int default 1;
