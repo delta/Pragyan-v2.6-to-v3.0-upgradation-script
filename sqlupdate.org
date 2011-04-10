@@ -1,0 +1,566 @@
+   CREATE TABLE IF NOT EXISTS `article_comments` (
+     `comment_id` int(11) NOT NULL AUTO_INCREMENT,
+     `page_modulecomponentid` int(11) NOT NULL,
+     `user` varchar(200) NOT NULL,
+     `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     `comment` text NOT NULL,
+     PRIMARY KEY (`comment_id`)
+   ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 ;
+
+   CREATE TABLE IF NOT EXISTS `article_draft` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `draft_number` int(11) NOT NULL,
+     `draft_content` text NOT NULL,
+     `draft_lastsaved` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+     `user_id` int(11) NOT NULL
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `book_desc` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `initial` int(11) NOT NULL,
+     `list` varchar(256) NOT NULL,
+     `menu_hide` varchar(500) NOT NULL,
+     PRIMARY KEY (`page_modulecomponentid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `forum_like` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `forum_thread_id` int(11) NOT NULL,
+     `forum_post_id` int(11) NOT NULL,
+     `forum_like_user_id` int(11) NOT NULL,
+     `like_status` enum('0','1') NOT NULL COMMENT '(0-Dislike 1-like)'
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `list_images` (
+     `page_id` int(11) NOT NULL,
+     `page_name` varchar(51) NOT NULL,
+     `page_image` varchar(51) NOT NULL
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `list_prop` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `depth` int(11) NOT NULL,
+     UNIQUE KEY `page_modulecomponentid_2` (`page_modulecomponentid`),
+     KEY `page_modulecomponentid` (`page_modulecomponentid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `poll_content` (
+     `pid` int(11) NOT NULL auto_increment,
+     `page_modulecomponentid` int(11) NOT NULL,
+     `ques` longtext NOT NULL,
+     `o1` longtext NOT NULL,
+     `o2` longtext NOT NULL,
+     `o3` longtext NOT NULL,
+     `o4` longtext NOT NULL,
+     `o5` longtext NOT NULL,
+     `o6` longtext NOT NULL,
+     `multiple_opt` tinyint(1) NOT NULL default '0' COMMENT '1 indicates multiple options',
+     `visibility` tinyint(1) NOT NULL default '1',
+     PRIMARY KEY (`pid`)
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+   CREATE TABLE IF NOT EXISTS `poll_log` (
+     `pid` int(11) NOT NULL auto_increment,
+     `page_modulecomponentid` int(11) NOT NULL,
+     `o1` int(11) NOT NULL default '0',
+     `o2` int(11) NOT NULL default '0',
+     `o3` int(11) NOT NULL default '0',
+     `o4` int(11) NOT NULL default '0',
+     `o5` int(11) NOT NULL default '0',
+     `o6` int(11) NOT NULL default '0',
+     PRIMARY KEY (`pid`)
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+
+   CREATE TABLE IF NOT EXISTS `poll_users` (
+     `pid` int(11) NOT NULL,
+     `userID` int(11) NOT NULL,
+     `page_modulecomponentid` int(11) NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `forum_visits` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `user_id` int(11) NOT NULL,
+     `last_visit` datetime NOT NULL
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `pragyanV2_modules` (
+     `module_name` varchar(128) NOT NULL,
+     `module_tables` varchar(500) NOT NULL,
+     `allow_uploads` tinyint(1),
+     PRIMARY KEY (`module_name`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `pragyanV2_global` (
+     `attribute` varchar(50) NOT NULL,
+     `value` text NOT NULL,
+     PRIMARY KEY (`attribute`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `pragyanV2_openid_users` (
+     `openid_id` INT NOT NULL AUTO_INCREMENT,
+     `openid_url` VARCHAR(2063) NOT NULL ,
+     `user_id` INT NOT NULL ,
+     PRIMARY KEY (`openid_id`)
+   )ENGINE = MyISAM ;
+   
+   CREATE TABLE IF NOT EXISTS `pragyanV2_widgets` (
+     `widget_id` int(11) NOT NULL,
+     `widget_instanceid` int(11) NOT NULL,
+     `page_id` int(11) NOT NULL,
+     `widget_location` int(11) NOT NULL,
+     `widget_order` int(11) NOT NULL,
+     `widget_propagate` int(1) NOT NULL DEFAULT '0',
+     PRIMARY KEY (`widget_id`,`widget_instanceid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `pragyanV2_widgetsconfig` (
+     `widget_id` int(11) NOT NULL,
+     `widget_instanceid` int(11) NOT NULL,
+     `config_name` varchar(128) NOT NULL,
+     `config_value` longtext NOT NULL,
+     PRIMARY KEY (`widget_id`,`widget_instanceid`,`config_name`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `pragyanV2_widgetsdata` (
+     `widget_id` int(11) NOT NULL,
+     `widget_instanceid` int(11) NOT NULL,
+     `widget_datakey` varchar(500) NOT NULL,
+     `widget_datavalue` longtext NOT NULL,
+     PRIMARY KEY (`widget_id`,`widget_instanceid`,`widget_datakey`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `pragyanV2_widgetsconfiginfo` (
+     `widget_id` int(11) NOT NULL,
+     `config_name` varchar(128) NOT NULL,
+     `config_type` enum('text','textarea','bool','integer','date','select','hidden','datetime','file','radio','checkbox','noinput') NOT NULL,
+     `config_options` text NOT NULL,
+     `config_displaytext` text NOT NULL,
+     `config_default` longtext NOT NULL,
+     `is_global` int(1) NOT NULL,
+     `config_rank` int(10) NOT NULL,
+     PRIMARY KEY (`widget_id`,`config_name`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `pragyanV2_widgetsinfo` (
+     `widget_id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+     `widget_name` VARCHAR( 100 ) NOT NULL ,
+     `widget_classname` VARCHAR ( 100 ) NOT NULL,
+     `widget_description` MEDIUMTEXT NOT NULL ,
+     `widget_version` VARCHAR( 27 ) NOT NULL ,
+     `widget_author` TEXT NULL ,
+     `widget_foldername` VARCHAR( 27 ) NOT NULL ,
+     UNIQUE ( `widget_foldername` )
+   ) ENGINE=MYISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `pragyanV2_templates` (
+     `template_name` varchar(50) NOT NULL,
+     PRIMARY KEY (`template_name`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `pragyanV2_tempuploads` (
+     `id` int(11) NOT NULL AUTO_INCREMENT,
+     `filePath` varchar(500) NOT NULL,
+     `info` varchar(1000) NOT NULL,
+     PRIMARY KEY (`id`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+   CREATE TABLE IF NOT EXISTS `safedit_sections` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `section_id` int(11) NOT NULL,
+     `section_heading` varchar(256) DEFAULT NULL,
+     `section_type` varchar(64) DEFAULT NULL,
+     `section_show` tinyint(4) NOT NULL,
+     `section_priority` int(11) DEFAULT NULL,
+     `section_content` text
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `share` (
+     `page_modulecomponentid` int(11) NOT NULL,
+     `page_desc` text NOT NULL,
+     `file_type` varchar(100) NOT NULL,
+     `maxfile_size` int(11) NOT NULL,
+     PRIMARY KEY (`page_modulecomponentid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `share_comments` (
+     `comment_id` int(11) NOT NULL,
+     `file_id` int(11) NOT NULL,
+     `page_modulecomponentid` int(11) NOT NULL,
+     `comment` text NOT NULL,
+     `userid` int(11) NOT NULL,
+     `comment_datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     PRIMARY KEY (`comment_id`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `share_files` (
+     `file_id` int(11) NOT NULL AUTO_INCREMENT,
+     `page_modulecomponentid` int(11) NOT NULL,
+     `upload_filename` varchar(50) NOT NULL,
+     `file_name` varchar(50) NOT NULL,
+     `file_desc` text NOT NULL,
+     `upload_userid` int(11) NOT NULL,
+     PRIMARY KEY (`file_id`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+
+create table sites(
+	site_id int auto_increment not null primary key,
+	url varchar(255),
+	title varchar(255),
+	short_desc text,
+	indexdate date,
+	spider_depth int default 2,
+	required text,
+	disallowed text,
+	can_leave_domain bool) ENGINE = MYISAM;
+create table links (
+	link_id int auto_increment primary key not null,
+	site_id int,
+	url varchar(255) not null,
+	title varchar(200),
+	description varchar(255),
+	fulltxt mediumtext,
+	indexdate date,
+	size float(2),
+	md5sum varchar(32),
+	key url (url),
+	key md5key (md5sum),
+	visible int default 0, 
+	level int) ENGINE = MYISAM;
+create table keywords	(
+	keyword_id int primary key not null auto_increment,
+	keyword varchar(30) not null,
+	unique kw (keyword),
+	key keyword (keyword(10))) ENGINE = MYISAM;
+create table link_keyword0 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyword1 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyword2 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyword3 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyword4 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyword5 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyword6 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyword7 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyword8 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyword9 (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyworda (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keywordb (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keywordc (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keywordd (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keyworde (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table link_keywordf (
+	link_id int not null,
+	keyword_id int not null,
+	weight int(3),
+	domain int(4),
+	key linkid(link_id),
+	key keyid(keyword_id)) ENGINE = MYISAM;
+create table categories(
+	category_id integer not null auto_increment primary key, 
+	category text,
+	parent_num integer
+	) ENGINE = MYISAM;
+create table site_category (
+	site_id integer,
+	category_id integer
+	) ENGINE = MYISAM;
+create table temp (
+	link varchar(255),
+	level integer,
+	id varchar (32)
+	) ENGINE = MYISAM;
+create table pending (
+	site_id integer,
+	temp_id varchar(32),
+	level integer,
+	count integer,
+	num integer) ENGINE = MYISAM;
+
+create table query_log (
+	query varchar(255),
+	time timestamp(14),
+	elapsed float(2),
+	results int,
+	key query_key(query)
+	) ENGINE = MYISAM;
+
+create table domains (
+	domain_id int auto_increment primary key not null,	
+	domain varchar(255)
+) ENGINE = MYISAM;
+
+   CREATE TABLE IF NOT EXISTS `quiz_answersubmissions` (
+     `page_modulecomponentid` int(11) NOT NULL COMMENT 'Quiz ID',
+     `quiz_sectionid` int(11) NOT NULL COMMENT 'Section ID',
+     `quiz_questionid` int(11) NOT NULL COMMENT 'Question ID',
+     `user_id` int(11) NOT NULL COMMENT 'User ID',
+     `quiz_questionrank` int(11) NOT NULL COMMENT 'The rank of the question in the page',
+     `quiz_submittedanswer` text NOT NULL COMMENT 'Answer submitted by the user',
+     `quiz_questionviewtime` datetime default NULL COMMENT 'When the user saw this question for the first time',
+     `quiz_answersubmittime` datetime default NULL COMMENT 'When the user submitted his answer',
+     `quiz_marksallotted` decimal(5,2) default NULL COMMENT 'Marks allotted for the given question',
+     UNIQUE KEY `page_modulecomponentid` (`page_modulecomponentid`,`quiz_sectionid`,`quiz_questionid`,`user_id`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `quiz_descriptions` (
+     `page_modulecomponentid` int(11) NOT NULL auto_increment COMMENT 'Quiz ID',
+     `quiz_title` varchar(260) NOT NULL,
+     `quiz_headertext` text NOT NULL COMMENT 'Text shown before the user clicks Start Test',
+     `quiz_submittext` text NOT NULL COMMENT 'Text shown once the user submits the test',
+     `quiz_quiztype` enum('simple','gre') NOT NULL,
+     `quiz_testduration` time NOT NULL,
+     `quiz_questionspertest` int(11) NOT NULL,
+     `quiz_questionsperpage` int(11) NOT NULL,
+     `quiz_timeperpage` int(11) NOT NULL,
+     `quiz_startdatetime` datetime NOT NULL COMMENT 'When the quiz should open to users',
+     `quiz_enddatetime` datetime NOT NULL COMMENT 'When the quiz should close to users',
+     `quiz_allowsectionrandomaccess` tinyint(1) NOT NULL COMMENT 'Whether sections can be accessed in any order by the user, or must be accessed in the same order they were created',
+     `quiz_mixsections` tinyint(1) NOT NULL,
+     `quiz_showquiztimer` tinyint(1) NOT NULL COMMENT 'Whether the quiz timer must be shown',
+     `quiz_showpagetimer` tinyint(1) NOT NULL COMMENT 'Whether the page timer must be shown',
+     PRIMARY KEY (`page_modulecomponentid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+
+   CREATE TABLE IF NOT EXISTS `quiz_objectiveoptions` (
+     `page_modulecomponentid` int(11) NOT NULL COMMENT 'Quiz ID',
+     `quiz_sectionid` int(11) NOT NULL COMMENT 'Section ID',
+     `quiz_questionid` int(11) NOT NULL COMMENT 'Question ID',
+     `quiz_optionid` int(11) NOT NULL auto_increment COMMENT 'Option ID',
+     `quiz_optiontext` text NOT NULL COMMENT 'The option itself!',
+     `quiz_optionrank` int(11) NOT NULL COMMENT 'A rank, according to which options will be ordered',
+     PRIMARY KEY (`page_modulecomponentid`,`quiz_sectionid`,`quiz_questionid`,`quiz_optionid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+   CREATE TABLE IF NOT EXISTS `quiz_questions` (
+     `page_modulecomponentid` int(11) NOT NULL COMMENT 'Quiz ID',
+     `quiz_sectionid` int(11) NOT NULL COMMENT 'Section ID',
+     `quiz_questionid` int(11) NOT NULL auto_increment COMMENT 'Question ID',
+     `quiz_question` text NOT NULL COMMENT 'The question',
+     `quiz_questiontype` enum('sso','mso','subjective') NOT NULL COMMENT 'Whether the question is single select objective, multiselect objective, or subjective',
+     `quiz_questionrank` int(11) NOT NULL COMMENT 'A rank to determine the ordering of questions in a section',
+     `quiz_questionweight` int(11) NOT NULL COMMENT 'Question difficulty level, based on which positive and negative marks may be alloted',
+     `quiz_answermaxlength` int(11) NOT NULL COMMENT 'Maximum number of characters in the answer, in case it''s a subjective question',
+     `quiz_rightanswer` text NOT NULL COMMENT 'The correct answer for the question. In case of sso, the option id, in case of mmo, a delimited set of options ids, and in case of subjective, a hint to the human correcting the quiz',
+     PRIMARY KEY (`page_modulecomponentid`,`quiz_sectionid`,`quiz_questionid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+   CREATE TABLE IF NOT EXISTS `quiz_sections` (
+     `page_modulecomponentid` int(11) NOT NULL COMMENT 'Quiz ID',
+     `quiz_sectionid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Section ID',
+     `quiz_sectiontitle` varchar(260) NOT NULL COMMENT 'Section Title',
+     `quiz_sectionssocount` int(11) NOT NULL COMMENT 'Number of Single Select Objective questions to be taken from this section',
+     `quiz_sectionmsocount` int(11) NOT NULL COMMENT 'Number of Multiselect Objective questions to be taken from this section',
+     `quiz_sectionsubjectivecount` int(11) NOT NULL,
+     `quiz_sectiontimelimit` time NOT NULL COMMENT 'Amount of time a user may spend on this section (taken from the time when he first opened this section)',
+     `quiz_sectionquestionshuffled` tinyint(1) NOT NULL COMMENT 'Whether questions should be shuffled (1), or taken in the order given by question_rank (0)',
+     `quiz_sectionrank` int(11) NOT NULL,
+     `quiz_sectionshowlimit` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Whether the section remaining time limit should be displayed(1) or not(0)',
+     PRIMARY KEY (`page_modulecomponentid`,`quiz_sectionid`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+   CREATE TABLE IF NOT EXISTS `quiz_userattempts` (
+     `page_modulecomponentid` int(11) NOT NULL COMMENT 'Quiz ID',
+     `quiz_sectionid` int(11) NOT NULL COMMENT 'Section ID',
+     `user_id` int(11) NOT NULL COMMENT 'User ID',
+     `quiz_attemptstarttime` datetime NOT NULL COMMENT 'Time when the user started the quiz',
+     `quiz_submissiontime` datetime default NULL COMMENT 'Time when the user submitted the quiz. If an entry exists here, with this field null, the user has started the quiz, but hasn''t completed it yet.',
+     `quiz_marksallotted` decimal(5,2) default NULL COMMENT 'Total marks the person scored',
+     UNIQUE KEY `page_modulecomponentid` (`page_modulecomponentid`,`quiz_sectionid`,`user_id`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   CREATE TABLE IF NOT EXISTS `quiz_weightmarks` (
+     `page_modulecomponentid` int(11) NOT NULL COMMENT 'Quiz ID',
+     `question_weight` int(11) NOT NULL COMMENT 'Question Weight',
+     `question_positivemarks` decimal(5,2) NOT NULL COMMENT 'Marks allotted in case a correct answer was submitted',
+     `question_negativemarks` decimal(5,2) NOT NULL COMMENT 'Marks deducted in case a wrong answer was submitted',
+     UNIQUE KEY `page_modulecomponentid` (`page_modulecomponentid`,`question_weight`)
+   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+   DROP TABLE  `poll_answers`;
+
+   DROP TABLE  `poll_questions`;
+
+   DROP TABLE `quiz_answersubmissions`;
+
+   DROP TABLE `quiz_descriptions`;
+
+   DROP TABLE `quiz_objectiveoptions`;
+
+   DROP TABLE `quiz_questions`;
+
+   DROP TABLE `quiz_sections`;
+
+   DROP TABLE `quiz_userattempts`;
+
+   DROP TABLE `quiz_weightmarks`;
+
+   DROP TABLE `pragyanV2_userprofile_elementdesc`;
+
+   DROP TABLE `pragyanV2_userprofile_elementdata`;
+
+   ALTER TABLE  `form_desc` CHANGE  `form_heading`  `form_heading` VARCHAR( 1000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+   ALTER TABLE  `form_elementdesc` CHANGE  `form_elementname`  `form_elementname` VARCHAR( 1000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+   CHANGE  `form_elementdisplaytext`  `form_elementdisplaytext` VARCHAR( 5000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT  'Description of data held',
+   CHANGE  `form_elementdefaultvalue`  `form_elementdefaultvalue` VARCHAR( 4000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+   CHANGE  `form_elementmorethan`  `form_elementmorethan` VARCHAR( 4000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+   CHANGE  `form_elementlessthan`  `form_elementlessthan` VARCHAR( 4000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+   ALTER TABLE  `forum_module` CHANGE  `last_post_datetime`  `last_post_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   ADD  `total_thread_count` INT( 11 ) NOT NULL DEFAULT  '1',
+   ADD  `allow_delete_posts` ENUM(  '0',  '1' ) NOT NULL DEFAULT  '0' COMMENT  '(1-Allow 0-Don''t Allow)',
+   ADD  `allow_like_posts` ENUM(  '0',  '1' ) NOT NULL DEFAULT  '0' COMMENT  '(1-Allow 0-Don''t Allow)';
+
+   ALTER TABLE  `gallery_name` ADD  `imagesPerPage` INT( 11 ) NOT NULL DEFAULT  '6',
+   ADD  `allowViews` TINYINT( 1 ) NOT NULL DEFAULT  '0';
+
+   ALTER TABLE  `gallery_pics` ADD  `pic_rate` INT( 11 ) NOT NULL;
+
+   ALTER TABLE `hospi_accomodation_status`
+   DROP `hospi_projected_checkin`,
+   DROP `hospi_projected_checkout`;
+
+   ALTER TABLE  `hospi_hostel` ADD  `hospi_floor` INT( 1 ) NOT NULL;
+
+   ALTER TABLE  `news_desc` CHANGE  `news_title`  `news_title` VARCHAR( 150 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+   CHANGE  `news_description`  `news_description` VARCHAR( 1000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+   ADD  `news_link` VARCHAR( 250 ) NULL DEFAULT NULL ,
+   ADD  `news_copyright` VARCHAR( 1000 ) NULL DEFAULT NULL;
+
+   ALTER TABLE  `article_content` ADD  `allowComments` TINYINT( 1 ) NOT NULL;
+
+   ALTER TABLE  `pragyanV2_pages` CHANGE  `page_module`  `page_module` VARCHAR( 128 ) NOT NULL COMMENT  'Module type of the page',
+   ADD `page_template` varchar(50) NOT NULL,
+   ADD `page_image` varchar(300) DEFAULT NULL,
+   ADD `page_displayinsitemap` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'To display in sitemap or not',
+   ADD `page_displayicon` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 - To display icon in menu 0 - Not to display icon in menu',
+   ADD `page_menutype` enum('classic','complete','multidepth') NOT NULL DEFAULT 'classic' COMMENT 'Type of the menu : Classic (normal) or Drop-down (with some depth)',
+   ADD `page_menudepth` int(11) NOT NULL DEFAULT '1',
+   ADD `page_openinnewtab` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Whether to open the page in a new tab when clicked',
+   ADD INDEX (  `page_module` ),
+   AUTO_INCREMENT =5;
+
+   ALTER TABLE  `pragyanV2_permissionlist` DROP INDEX  `permission type`;
+
+   ALTER TABLE  `pragyanV2_permissionlist` CHANGE  `page_module`  `page_module` VARCHAR( 128 )  NOT NULL,
+   ADD UNIQUE KEY  `permission type` (  `page_module` ,  `perm_action` ) ,
+   ADD FOREIGN KEY (  `page_module` ) REFERENCES  `pragyanV3_modules` (  `module_name` );
+
+
+   ALTER TABLE  `pragyanV2_uploads`
+   CHANGE  `page_module`  `page_module` VARCHAR( 128 ) NOT NULL,
+   ADD FOREIGN KEY (`page_module`) REFERENCES `pragyanV2_modules`(`module_name`);
+
+   ALTER TABLE  `pcmsv2`.`pragyanV2_usergroup` DROP INDEX  `user_id` ,
+   ADD INDEX  `user_id` (  `user_id` , `group_id` );
+   
+   ALTER TABLE  `pragyanV2_users` CHANGE  `user_loginmethod`  `user_loginmethod` ENUM(  'openid',  'db',  'ldap',  'imap',  'ads' ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT  'db' COMMENT 'Login Method'
+
+
+   INSERT IGNORE INTO `pragyanV2_global` (`attribute`, `value`) VALUES
+     ('cms_title', 'Pragyan CMS v3'),
+     ('cms_desc', 'This website is powered by Pragyan CMS'),
+     ('cms_keywords', 'Pragyan CMS v3.0, Sourceforge, Abhishek Shrivastava'),
+     ('cms_email', 'no-reply@localhost'),
+     ('allow_pagespecific_header', '0'),
+     ('allow_pagespecific_template', '0'),
+     ('default_template', 'crystalx'),
+     ('upload_limit', '50000000'),
+     ('default_user_activate', '1'),
+     ('default_mail_verify', '0'),
+     ('breadcrumb_submenu', '0'),
+     ('reindex_frequency', '7'),
+     ('censor_words',''),
+     ('recaptcha','0'),
+     ('recaptcha_public',''),
+     ('recaptcha_private',''),
+     ('deadline_notify','0');
+     
