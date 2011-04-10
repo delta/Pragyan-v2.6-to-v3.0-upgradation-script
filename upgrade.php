@@ -1,64 +1,18 @@
 <?php
 
-function checkLevel() {
-  if(!is_file("config.inc.php")) {
-    //echo "file exists";
-    return 1;			       
-  }
-  else {
-    return 0;
-  }
-}
+include("functions.lib.php");
 
-function archive() {
-  $archive_name = "archive.zip"; // name of zip file
-  $archive_folder = "../cms"; // the folder which you archivate
-  
-  $zip = new ZipArchive; 
-  if ($zip -> open($archive_name, ZipArchive::CREATE) === TRUE) 
-  { 
-      $dir = preg_replace('/[\/]{2,}/', '/', $archive_folder."/"); 
-      
-      $dirs = array($dir); 
-      while (count($dirs)) 
-      { 
-        $dir = current($dirs); 
-        $zip -> addEmptyDir($dir); 
-        //echo $dir."<br>";
-        $dh = opendir($dir); 
-        while(false!==($file = readdir($dh))) 
-        { 
-            if ($file != '.' && $file != '..') 
-            { 
-                if (is_file($dir.$file)) 
-                    $zip -> addFile($dir.$file, substr($dir.$file,3)); 
-                else if (is_dir($dir.$file))
-                    $dirs[] = $dir.$file."/";
-            } 
-        } 
-        closedir($dh); 
-        array_shift($dirs); 
-      } 
-      
-      $zip -> close(); 
-      echo 'Archiving is sucessful!'; 
-  } 
-  else 
-  {
-    echo 'Error, can\'t create a zip file!'; 
-  } 
-}
+//copynewfiles();
+//die();
 
-archive();
-
-$level = 5;//checkLevel();
+$level = checkLevel();
 
 switch($level) {
   case 0:
     echo "Installation complete";
     break;
-  case 1:
-    echo "Copying the configuration files from current website<br>\n";    
+  case 1://copying the configuration file to the upgrade directory
+    echo "Copying the configuration files from current website...<br>\n";    
     if(!copy("../cms/config.inc.php","config.inc.php")) {
       echo "Failed to copy the configuration file";
     }
@@ -66,8 +20,35 @@ switch($level) {
       echo "Configuration files successfully copied";
     }
     break;
-  case 2:
-    echo "";
+  case 2://archiving the files
+    echo "Archiving the files for backup...<br />";
+    archive();
+    break;
+  case 3://deleting the old code
+    echo "Deleting the old code... ";
+    if(is_dir("../INSTALL/")) rrmdir("../INSTALL/");
+    if(is_dir("../cms/")) {
+      rename("../cms/uploads","uploads");
+      rrmdir("../cms/");
+    }
+    if(is_file("../index.php")) unlink("../index.php");
+    echo "Done<br>";
+    break;
+  case 4://putting up the under maintenance
+    echo "Putting up an Under Maintenance page... ";
+    copy("undermaintenance.php","../index.php");
+    echo "Done";
+    break;
+  case 5://database manipulation
+    echo "Updating the database... ";
+    updatedb();
+    file_put_contents("sqlmanipulationdone.txt","");
+    echo "Done<br>";
+    break;
+  case 6://copying new files
+    echo "Copying files of Pragyan CMS v3 to the cms directory... ";
+    copynewfiles();
+    echo "Done<br>";
     break;
 }
 ?>

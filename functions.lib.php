@@ -11,6 +11,15 @@ function checkLevel() {
   else if(is_dir("../INSTALL")||is_dir("../cms")) {
     return 3;
   }
+  else if(!is_file("../index.php")) {
+    return 4;
+  }
+  else if(!is_file("sqlmanipulationdone.txt")) {
+    return 5;
+  }
+  else if(!is_dir("../cms")) {
+    return 6;
+  }
   else {
     return 0;
   }
@@ -41,7 +50,7 @@ function archive() {
                 else if (is_dir($dir.$file))
                     $dirs[] = $dir.$file."/";
             } 
-        } 
+        }
         closedir($dh); 
         array_shift($dirs); 
       } 
@@ -66,6 +75,28 @@ function rrmdir($dir) {
      reset($objects); 
      rmdir($dir); 
    } 
+}
+
+function updatedb() {
+  $sourceFolder=".";
+  $uploadFolder=".";
+  include "config.inc.php";
+  $str = file_get_contents("sqlupdate.org");
+  $str = str_replace("pragyanV2_",MYSQL_DATABASE_PREFIX,$str);
+
+  $dbase = mysql_connect(MYSQL_SERVER, MYSQL_USERNAME, MYSQL_PASSWORD) or die("Could not connect to server");
+  mysql_select_db(MYSQL_DATABASE) or die("Could not connect to database");
+  $queries = explode(";",$str);
+  foreach($queries as $query) {
+    $query = trim($query);
+    $res = mysql_query($query);
+  }
+}
+
+function copynewfiles() {
+rename("cms","../cms");
+rename("uploads","../cms/uploads");
+copy("newindex","../index.php");
 }
 
 ?>

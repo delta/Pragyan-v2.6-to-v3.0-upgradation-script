@@ -1,15 +1,15 @@
 * Changes to do while upgrading
-** Copying the configuration files
-** use the config details to fill up details to `prefix_globals`
-** Backup. Zip everything and give the user download it.
-** Delete the old code
-** Under maintenance
-** Database Manipulation
+** DONE Copying the configuration files
+** DONE Backup. Zip everything and give the user download it.
+** DONE Delete the old code
+** DONE Under maintenance
+** DONE Database Manipulation
+** DONE use the config details to fill up details to `prefix_globals`
 ** Upgrade package
 *** An upgrade package will be provided, which will be basically a zip file
 *** The user is expected to unzip the file in the directory containing the cms directory
 *** From there, he can run the upgrade script which takes care of the rest.
-** Copy the new code
-** Notify the user
-
-   
+** DONE Copy the new code
+** DONE copy back the uploads dir from the archive to the new cms dir
+** TODO create a new config.inc.php file in which the configurations are synchronised with the previous site configurations 
+** TODO Notify the user
