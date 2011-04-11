@@ -8,7 +8,7 @@ function checkLevel() {
     //echo "file exists";
     return 2;			       
   }
-  else if(is_dir("../INSTALL")||is_dir("../cms")) {
+  else if(is_dir("../INSTALL")||is_dir("../cmso")) {
     return 3;
   }
   else if(!is_file("../index.php")) {
@@ -27,7 +27,7 @@ function checkLevel() {
 
 function archive() {
   $archive_name = "archive.zip"; // name of zip file
-  $archive_folder = "../cms"; // the folder which you archivate
+  $archive_folder = "../cmso"; // the folder which you archivate
   
   $zip = new ZipArchive; 
   if ($zip -> open($archive_name, ZipArchive::CREATE) === TRUE) 
@@ -94,9 +94,15 @@ function updatedb() {
 }
 
 function copynewfiles() {
-rename("cms","../cms");
-rename("uploads","../cms/uploads");
-copy("newindex","../index.php");
+rename("new/cms","../cms");
+rename("new/uploads","../cms/uploads");
+copy("./new/newindex","../index.php");
 }
 
+function writeconfig() {
+  $sourceFolder=".";
+  $uploadFolder=".";
+  include "config.inc.php";
+  
+}
 ?>

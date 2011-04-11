@@ -13,7 +13,7 @@ switch($level) {
     break;
   case 1://copying the configuration file to the upgrade directory
     echo "Copying the configuration files from current website...<br>\n";    
-    if(!copy("../cms/config.inc.php","config.inc.php")) {
+    if(!copy("../cmso/config.inc.php","config.inc.php")) {
       echo "Failed to copy the configuration file";
     }
     else {
@@ -27,9 +27,9 @@ switch($level) {
   case 3://deleting the old code
     echo "Deleting the old code... ";
     if(is_dir("../INSTALL/")) rrmdir("../INSTALL/");
-    if(is_dir("../cms/")) {
-      rename("../cms/uploads","uploads");
-      rrmdir("../cms/");
+    if(is_dir("../cmso/")) {
+      rename("../cmso/uploads","./new/uploads");
+      rrmdir("../cmso/");
     }
     if(is_file("../index.php")) unlink("../index.php");
     echo "Done<br>";
@@ -49,6 +49,11 @@ switch($level) {
     echo "Copying files of Pragyan CMS v3 to the cms directory... ";
     copynewfiles();
     echo "Done<br>";
+    break;
+  case 7://writing the config file
+    echo "Writing the confiiguration file... ";
+    writeconfig();
+    echo "Done";
     break;
 }
 ?>

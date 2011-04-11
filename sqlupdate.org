@@ -539,13 +539,13 @@ create table domains (
    CHANGE  `page_module`  `page_module` VARCHAR( 128 ) NOT NULL,
    ADD FOREIGN KEY (`page_module`) REFERENCES `pragyanV2_modules`(`module_name`);
 
-   ALTER TABLE  `pcmsv2`.`pragyanV2_usergroup` DROP INDEX  `user_id` ,
+   ALTER TABLE  `pragyanV2_usergroup` DROP INDEX  `user_id` ,
    ADD INDEX  `user_id` (  `user_id` , `group_id` );
    
    ALTER TABLE  `pragyanV2_users` CHANGE  `user_loginmethod`  `user_loginmethod` ENUM(  'openid',  'db',  'ldap',  'imap',  'ads' ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT  'db' COMMENT 'Login Method'
 
 
-   INSERT IGNORE INTO `pragyanV2_global` (`attribute`, `value`) VALUES
+   INSERT INTO `pragyanV2_global` (`attribute`, `value`) VALUES
      ('cms_title', 'Pragyan CMS v3'),
      ('cms_desc', 'This website is powered by Pragyan CMS'),
      ('cms_keywords', 'Pragyan CMS v3.0, Sourceforge, Abhishek Shrivastava'),
