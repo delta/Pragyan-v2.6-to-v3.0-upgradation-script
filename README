@@ -1,0 +1,60 @@
+INSTALLATION STEPS
+===================
+
+* go to the direcroy in which the cms has been installed
+
+{{{
+$ cd /path/to/dir/
+}}}
+
+* now copy all uploaded files in your site (which is present in cms/uploads directory) outside the cms directory
+
+{{{
+$ mv cms/uploads .
+}}}
+
+* move the configurations file to outside the cms directory
+
+{{{
+$ mv cms/config.inc.php .
+}}}
+
+* if you're using a custom template (other than the default crystalx template), you might want to take a backup of your template files and start the process of making it compatible with pcmsv3.0
+
+* now completely remove the cms and INSTALL directories
+
+{{{
+$ su
+Password: 
+# rm -r cms/ INSTALL/
+}}}
+
+* copy or extract the cms directory of pragyan v3.0 stable release to this directory
+
+* open the new and old config files (config.inc.php) using a text editor and create the new config file
+
+* copy the uploads dir to the new cms directory
+
+{{{
+# mv ./uploads ./cms
+}}}
+
+make sure you set 777 premissions to the uploads directory
+
+* run the sql queries given in the sqlupdate.sql file in the database in which the cms was installed to upgrade your database to pcmsV3
+
+* You might want to install a new template to your site (go to *admin* page in the site and select the templates submenu)
+
+* You're finally done upgrading your site to the new flashy Pragyan CMS v3. :-)
+
+
+
+
++-------------------------------------------+
+|  For any queries regarding this script,   |
+|      please contact V. Shiva Nandan       |
+|      seekshiva [at] gmail [dot] com       |
+|      		      	    	  	    |
+|     Thanks for using the script :-)  	    |
+|      		      	    	  	    |
++-------------------------------------------+
